@@ -1,49 +1,14 @@
-import { useState } from "react";
-
-const tempMovieData = [
-  {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt0133093",
-    Title: "The Matrix",
-    Year: "1999",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt6751668",
-    Title: "Parasite",
-    Year: "2019",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
-  },
-];
+import { useEffect, useState } from "react";
 
 const tempWatchedData = [
   {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+    id: "tt1375666",
+    title: "Spitfire Over Berlin",
+    year: "2022-05-13",
+    poster_path: "/xtPPOPTad1qopK6uDe3VlYUa22o.jpg",
     runtime: 148,
     imdbRating: 8.8,
     userRating: 10,
-  },
-  {
-    imdbID: "tt0088763",
-    Title: "Back to the Future",
-    Year: "1985",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
   },
 ];
 
@@ -51,8 +16,23 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
+
+  const getMovie = () => {
+    const URL = `https://api.themoviedb.org/3/discover/movie?`;
+    const API_KEY = `api_key=1787315acea95582c62c2ef4a134b49e`;
+    const PAGE = `&page=10`;
+
+    fetch(`${URL}${API_KEY}${PAGE}`)
+      .then((response) => response.json())
+      .then((response) => setMovies(response.results))
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    getMovie();
+  }, []);
 
   return (
     <>
@@ -129,21 +109,22 @@ function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
-        <Movie movie={movie} />
+        <Movie movie={movie} key={movie.title} />
       ))}
     </ul>
   );
 }
 
 function Movie({ movie }) {
+  const imgUrl = "https://image.tmdb.org/t/p/w500";
   return (
-    <li key={movie.imdbID}>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+    <li>
+      <img src={imgUrl + movie.poster_path} alt={`${movie.title} poster`} />
+      <h3>{movie.title}</h3>
       <div>
         <p>
           <span>🗓</span>
-          <span>{movie.Year}</span>
+          <span>{movie.release_date.split("-")[0]}</span>
         </p>
       </div>
     </li>
@@ -185,7 +166,7 @@ function WatcheMovieList({ watched }) {
     <>
       <ul className="list">
         {watched.map((movie) => (
-          <WatchedMovie movie={movie} />
+          <WatchedMovie movie={movie} key={movie.title} />
         ))}
       </ul>
     </>
@@ -193,10 +174,12 @@ function WatcheMovieList({ watched }) {
 }
 
 function WatchedMovie({ movie }) {
+  const imgUrl = "https://image.tmdb.org/t/p/w500";
+
   return (
-    <li key={movie.imdbID}>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+    <li>
+      <img src={imgUrl + movie.poster_path} alt={`${movie.title} poster`} />
+      <h3>{movie.title}</h3>
       <div>
         <p>
           <span>⭐️</span>
