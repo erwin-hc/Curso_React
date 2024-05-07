@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FcCalendar } from "react-icons/fc";
 
 const tempWatchedData = [
   {
@@ -19,16 +20,15 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
 
-  const getMovie = () => {
+  async function getMovie() {
     const URL = `https://api.themoviedb.org/3/discover/movie?`;
     const API_KEY = `api_key=1787315acea95582c62c2ef4a134b49e`;
-    const PAGE = `&page=10`;
+    const PAGE = `&page=1`;
 
-    fetch(`${URL}${API_KEY}${PAGE}`)
-      .then((response) => response.json())
-      .then((response) => setMovies(response.results))
-      .catch((err) => console.error(err));
-  };
+    const res = await fetch(`${URL}${API_KEY}${PAGE}`);
+    const data = await res.json();
+    setMovies(data.results);
+  }
 
   useEffect(() => {
     getMovie();
@@ -123,7 +123,9 @@ function Movie({ movie }) {
       <h3>{movie.title}</h3>
       <div>
         <p>
-          <span>🗓</span>
+          <span>
+            <FcCalendar />
+          </span>
           <span>{movie.release_date.split("-")[0]}</span>
         </p>
       </div>
