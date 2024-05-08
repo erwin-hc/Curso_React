@@ -1,37 +1,26 @@
 import { useEffect, useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 
-const tempWatchedData = [
-  {
-    id: "tt1375666",
-    title: "Spitfire Over Berlin",
-    year: "2022-05-13",
-    poster_path: "/xtPPOPTad1qopK6uDe3VlYUa22o.jpg",
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-];
-
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsloading] = useState(false);
+  const query = "harry";
 
-  async function getMovie() {
-    const URL = `https://api.themoviedb.org/3/discover/movie?`;
-    const API_KEY = `api_key=1787315acea95582c62c2ef4a134b49e`;
-    const PAGE = `&page=1`;
+  useEffect(function () {
+    async function fetchMovies() {
+      const URL = `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_API_KEY}&s=${query}`;
 
-    const res = await fetch(`${URL}${API_KEY}${PAGE}`);
-    const data = await res.json();
-    setMovies(data.results);
-  }
-
-  useEffect(() => {
-    getMovie();
+      setIsloading(true);
+      const res = await fetch(URL);
+      const data = await res.json();
+      setMovies(data.Search);
+      setIsloading(false);
+    }
+    fetchMovies();
   }, []);
 
   return (
@@ -43,7 +32,11 @@ export default function App() {
       </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading ? (
+            <p className="loader">Loading...</p>
+          ) : (
+            <MovieList movies={movies} />
+          )}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
@@ -69,6 +62,7 @@ function Logo() {
 
 function Search() {
   const [query, setQuery] = useState("");
+
   return (
     <input
       className="search"
@@ -83,7 +77,7 @@ function Search() {
 function NumResults({ movies }) {
   return (
     <p className="num-results">
-      Found <strong>{movies.length}</strong> results
+      Found <strong>{movies.length > 0 ? movies.length : ""}</strong> results
     </p>
   );
 }
@@ -109,24 +103,40 @@ function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.title} />
+        <Movie movie={movie} key={movie.imdbID} />
       ))}
     </ul>
   );
 }
 
 function Movie({ movie }) {
-  const imgUrl = "https://image.tmdb.org/t/p/w500";
   return (
     <li>
-      <img src={imgUrl + movie.poster_path} alt={`${movie.title} poster`} />
-      <h3>{movie.title}</h3>
+      {movie.Poster !== "N/A" ? (
+        <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      ) : (
+        <div
+          className="list img"
+          style={{
+            width: "40px",
+            height: "60px",
+            backgroundColor: "grey",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gridRow: "1 / -1",
+          }}
+        >
+          N/A
+        </div>
+      )}
+      <h3>{movie.Title}</h3>
       <div>
         <p>
           <span>
             <FcCalendar />
           </span>
-          <span>{movie.release_date.split("-")[0]}</span>
+          <span>{movie.Year}</span>
         </p>
       </div>
     </li>
@@ -168,7 +178,7 @@ function WatcheMovieList({ watched }) {
     <>
       <ul className="list">
         {watched.map((movie) => (
-          <WatchedMovie movie={movie} key={movie.title} />
+          <WatchedMovie movie={movie} key={movie.Title} />
         ))}
       </ul>
     </>
@@ -176,12 +186,10 @@ function WatcheMovieList({ watched }) {
 }
 
 function WatchedMovie({ movie }) {
-  const imgUrl = "https://image.tmdb.org/t/p/w500";
-
   return (
     <li>
-      <img src={imgUrl + movie.poster_path} alt={`${movie.title} poster`} />
-      <h3>{movie.title}</h3>
+      <img src={movie.Poster} alt={`${movie.Title} poster`} />
+      <h3>{movie.Title}</h3>
       <div>
         <p>
           <span>⭐️</span>
