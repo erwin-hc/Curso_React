@@ -74,6 +74,7 @@ function Star({ onRate, full, onMosueIn, onMouseOut, size, color }) {
     height: `${size}px`,
     display: "block",
     cursor: "pointer",
+    margin: "1.5px"
   };
   return (
     <span
