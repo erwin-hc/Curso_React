@@ -125,7 +125,7 @@ function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      <h1>Popcorn</h1>
     </div>
   );
 }
@@ -236,6 +236,11 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWached, watched }) {
     Genre: genre,
     imdbID,
     } = movie;
+
+  useEffect(() => {
+    if(!title) return
+    document.title = `${title}`
+  },[title])  
 
   useEffect(
     function () {
