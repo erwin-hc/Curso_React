@@ -3,21 +3,18 @@ import { FcCalendar } from "react-icons/fc";
 import { TbFaceIdError } from "react-icons/tb";
 import { FaLongArrowAltLeft, FaRegStar } from "react-icons/fa";
 import StarRating from "./StarRating.js";
+import { useMovies } from "./useMovies.js";
+import { useLocalSotrageState } from "./useLocalStorageState.js";
+import { useKey } from "./useKey.js";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsloading] = useState(false);
   const [query, setQuery] = useState("");
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-
-  const [watched, setWatched] = useState(() => {
-    const storedValue = localStorage.getItem("watched");
-    return JSON.parse(storedValue);
-  });
+  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
+  const [watched, setWatched] = useLocalSotrageState([], "watched");
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (selectedId === id ? null : id));
@@ -34,57 +31,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(
-    (movie) => {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched],
-  );
-
-  useEffect(
-    function () {
-      const controller = new AbortController();
-
-      async function fetchMovies() {
-        const URL = `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_API_KEY}&s=${query}`;
-
-        try {
-          setIsloading(true);
-          setError("");
-          const res = await fetch(URL, { signal: controller.signal });
-
-          if (!res.ok)
-            throw new TypeError("Something went wrong with fetching movies!");
-
-          const data = await res.json();
-
-          if (data.Response === "False")
-            throw new TypeError("Movie not found!");
-
-          setMovies(data.Search);
-        } catch ({ message }) {
-          if (message !== "The operation was aborted. ") {
-            setError(message);
-          }
-        } finally {
-          setIsloading(false);
-        }
-
-        if (query.length < 3) {
-          setMovies([]);
-          setError("");
-          return;
-        }
-      }
-
-      handleCloseMovie();
-      fetchMovies();
-
-      return () => controller.abort();
-    },
-    [query],
-  );
 
   return (
     <>
@@ -154,19 +100,11 @@ function Logo() {
 function Search({ query, setQuery }) {
   const imputEl = useRef(null);
 
-  useEffect(() => {
-    function callback(e) {
-      if (document.activeElement === imputEl.current) return;
-
-      if (e.code === "Enter" || e.code === "NumpadEnter") {
-        imputEl.current.focus();
-        setQuery("");
-      }
-    }
-    document.addEventListener("keydown", callback);
-
-    return () => document.removeEventListener("keydown", callback);
-  }, [setQuery]);
+  useKey("Enter", function () {
+    if (document.activeElement === imputEl.current) return;
+    imputEl.current.focus();
+    setQuery("");
+  });
 
   return (
     <input
@@ -269,16 +207,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWached, watched }) {
     if (userRating) countRef.current++;
   }, [userRating]);
 
-  useEffect(() => {
-    function callback(e) {
-      if (e.code === "Escape") {
-        onCloseMovie();
-      }
-    }
-    document.addEventListener("keydown", callback);
-
-    return () => document.removeEventListener("keydown", callback);
-  }, [onCloseMovie]);
+  useKey("Escape", onCloseMovie);
 
   const {
     Title: title,
