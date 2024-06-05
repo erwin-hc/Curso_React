@@ -4,8 +4,8 @@ export function useGeolocation() {
     const [isLoading, setIsLoading] = useState(false);
     const [position, setPosition] = useState({});
     const [error, setError] = useState(null);
-    const [cityName, setCityName] = useState("");
-
+    const [cityStateName, setCityStateName] = useState({});
+    
     async function fetchCityName(lat, lng) {      
         const YOUR_PRIVATE_TOKEN = `pk.bbc27fd22d82fd79345d3a03093148df`
         const URL = `https://us1.locationiq.com/v1/reverse.php?key=${YOUR_PRIVATE_TOKEN}&lat=${lat}&lon=${lng}&format=json`
@@ -13,14 +13,17 @@ export function useGeolocation() {
         const res = await fetch(URL)
         const data = await res.json()
           if (data.address) {
-            setCityName(data.address.city)
-            // setStateName(data.address.state)
+            setCityStateName(
+              {
+                "city" : data.address.city,
+                "state" : data.address.state
+              })            
           }        
     } 
        
     function getPosition() {
         if (!navigator.geolocation)
-            return setError("Your browser does not support geolocation");
+            return setError("Not supported!");
       
           setIsLoading(true);
           navigator.geolocation.getCurrentPosition(
@@ -33,12 +36,13 @@ export function useGeolocation() {
               setIsLoading(false);
             },
             (error) => {
-              setError(error.message);
+              setError("Not supported!");
+              console.error(error)
               setIsLoading(false);
             }
           );
     }
 
-    return { isLoading, position, error, cityName, getPosition}
+    return { isLoading, position, error, cityStateName, getPosition}
   
 }
