@@ -1,23 +1,42 @@
 import React, {  useEffect, useState } from 'react'
-import { MdOutlineMyLocation } from "react-icons/md";
-import { useGeolocation } from '../../hooks/useGeolocation'
 import { City } from "country-state-city";
+import { MdOutlineMyLocation } from "react-icons/md";
 
-export function Search() {
-  const [query, setQuery] = useState("")
+import { useGeolocation } from '../../hooks/useGeolocation'
+
+export function Search({setWeather}) {
+  const [pos, setPos] = useState([]);
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions ] = useState([]);
-
-  const { cityStateName, isLoading, getPosition, error } = useGeolocation();
-
-  const possibleValues = City.getAllCities().map((c) => c.name);
-
-  console.log(City.getAllCities())
-  const { city, state } = cityStateName
+    
+  const {
+    position : { lat, lng },
+    cityStateName : {city, state},
+    isLoading,
+    getPosition,
+    error 
+  } = useGeolocation();
+ 
+  const possibleValues = City.getAllCities().map((c) => {
+    const {name, stateCode} = c
+    return `${name}, ${stateCode}`
+  });
 
   function handleClick() {
-    getPosition()
+    getPosition()    
     setSuggestions([])
     setQuery(city || state ? `${city}, ${state}` : "")
+    if (error) setQuery(error)    
+    setPos(lat || lng ? [lat,lng] : ['','']) 
+    fetchWeather(lat,lng) 
+  }
+
+  async function fetchWeather(lat,lng) {
+    const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min`
+    const res = await fetch(URL)
+    const data = await res.json()
+    console.log(lat)
+    console.log(data)
   }
 
   const handleInputChange = (event) => {
@@ -43,16 +62,20 @@ export function Search() {
   
   useEffect(()=>{
     setQuery(city || state ? `${city}, ${state}` : "")
-    if (error) setQuery(error)
+    if (error) setQuery(error)  
+   
   },[city, state, error])
+
+  useEffect(()=>{
+    setPos(lat || lng ? [lat,lng] : ['',''])  
+    console.log(pos)
+  },[city])
 
   useEffect(()=>{
     const callback = () => setSuggestions([])    
     document.addEventListener("click", callback)
     return () => document.removeEventListener("click", callback)
   },[])
-
-  useEffect(()=>handleClick,[])
  
   return (
     <div className='flex items-center justify-center w-full max-w-5xl mx-auto mt-8'>
@@ -60,7 +83,7 @@ export function Search() {
       <input value={isLoading ? "Loading ..." : query}
       onChange={handleInputChange}
       placeholder='Search...' 
-      className='text-lg w-full h-10 text-blue-100 border-none rounded-full outline-none pl-14 bg-blue-300/20 oxygen-bold'></input>
+      className='text-ellipsis text-lg w-full h-10 text-blue-100 border-none rounded-full outline-none pl-14 pr-7 bg-blue-300/20 oxygen-bold'></input>
       <MdOutlineMyLocation onClick={handleClick}
       className='absolute text-3xl text-blue-100 cursor-pointer top-1 left-3 opacity-30 hover:opacity-70'/>
       { suggestions.length > 0 &&

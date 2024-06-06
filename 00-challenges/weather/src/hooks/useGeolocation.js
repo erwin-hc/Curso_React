@@ -5,6 +5,28 @@ export function useGeolocation() {
     const [position, setPosition] = useState({});
     const [error, setError] = useState(null);
     const [cityStateName, setCityStateName] = useState({});
+
+    function getPosition() {
+      if (!navigator.geolocation)
+          return setError("Not supported in your browser!");
+    
+        setIsLoading(true);
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setPosition({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude
+            });
+            fetchCityName(pos.coords.latitude, pos.coords.longitude)
+            setIsLoading(false);
+          },
+          (error) => {
+            setError(error.message);
+            console.error(error)
+            setIsLoading(false);
+          }
+        );
+    }
     
     async function fetchCityName(lat, lng) {      
         const YOUR_PRIVATE_TOKEN = `pk.bbc27fd22d82fd79345d3a03093148df`
@@ -20,29 +42,7 @@ export function useGeolocation() {
               })            
           }        
     } 
-       
-    function getPosition() {
-        if (!navigator.geolocation)
-            return setError("Not supported!");
-      
-          setIsLoading(true);
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              setPosition({
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude
-              });
-              fetchCityName(pos.coords.latitude, pos.coords.longitude)
-              setIsLoading(false);
-            },
-            (error) => {
-              setError("Not supported!");
-              console.error(error)
-              setIsLoading(false);
-            }
-          );
-    }
-
-    return { isLoading, position, error, cityStateName, getPosition}
+    
+    return { isLoading, position, error, cityStateName, getPosition }
   
 }
