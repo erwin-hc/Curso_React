@@ -5,8 +5,9 @@ export function useGeolocation() {
     const [position, setPosition] = useState({});
     const [error, setError] = useState(null);
     const [cityStateName, setCityStateName] = useState({});
+    const [forecast, setForecast ] = useState({})
 
-    function getPosition() {
+     function getPosition() {
       if (!navigator.geolocation)
           return setError("Not supported in your browser!");
     
@@ -18,6 +19,7 @@ export function useGeolocation() {
               lng: pos.coords.longitude
             });
             fetchCityName(pos.coords.latitude, pos.coords.longitude)
+            fetchWeather(pos.coords.latitude, pos.coords.longitude)
             setIsLoading(false);
           },
           (error) => {
@@ -42,7 +44,14 @@ export function useGeolocation() {
               })            
           }        
     } 
-    
-    return { isLoading, position, error, cityStateName, getPosition }
+
+    async function fetchWeather(lat,lng) {    
+      const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min`
+      const res = await fetch(URL)
+      const data = await res.json()
+      setForecast(data)
+    }
+        
+    return { isLoading, position, error, cityStateName, getPosition, forecast }
   
 }

@@ -4,7 +4,7 @@ import { MdOutlineMyLocation } from "react-icons/md";
 
 import { useGeolocation } from '../../hooks/useGeolocation'
 
-export function Search({setWeather}) {
+export function Search({ setWeather }) {
   const [pos, setPos] = useState([]);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions ] = useState([]);
@@ -14,7 +14,8 @@ export function Search({setWeather}) {
     cityStateName : {city, state},
     isLoading,
     getPosition,
-    error 
+    error,
+    forecast
   } = useGeolocation();
  
   const possibleValues = City.getAllCities().map((c) => {
@@ -23,21 +24,21 @@ export function Search({setWeather}) {
   });
 
   function handleClick() {
-    getPosition()    
     setSuggestions([])
+    getPosition()    
     setQuery(city || state ? `${city}, ${state}` : "")
-    if (error) setQuery(error)    
-    setPos(lat || lng ? [lat,lng] : ['','']) 
-    fetchWeather(lat,lng) 
+    if (error) setQuery(error)
+    setPos([])  
+  
   }
 
-  async function fetchWeather(lat,lng) {
-    const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min`
-    const res = await fetch(URL)
-    const data = await res.json()
-    console.log(lat)
-    console.log(data)
-  }
+  // async function fetchWeather(lat,lng) {    
+  //   const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min`
+  //   const res = await fetch(URL)
+  //   const data = await res.json()
+  //   console.log(lat)
+  //   console.log(data)
+  // }
 
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -52,6 +53,7 @@ export function Search({setWeather}) {
       setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);
+      setWeather({})
     }
   };
 
@@ -62,14 +64,9 @@ export function Search({setWeather}) {
   
   useEffect(()=>{
     setQuery(city || state ? `${city}, ${state}` : "")
-    if (error) setQuery(error)  
-   
-  },[city, state, error])
-
-  useEffect(()=>{
-    setPos(lat || lng ? [lat,lng] : ['',''])  
-    console.log(pos)
-  },[city])
+    if (error) setQuery(error)   
+    setWeather(forecast.daily)  
+  },[city, state, error, forecast, setWeather])
 
   useEffect(()=>{
     const callback = () => setSuggestions([])    
