@@ -46,12 +46,12 @@ export function useGeolocation() {
     } 
 
     async function fetchWeather(lat,lng) {    
-      const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min`
+      const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min&current=temperature_2m,apparent_temperature,weather_code`
       const res = await fetch(URL)
       const data = await res.json()
       setForecast(data)
     }
         
-    return { isLoading, position, error, cityStateName, getPosition, forecast }
+    return { isLoading, position, error, cityStateName, getPosition, forecast , fetchWeather }
   
 }

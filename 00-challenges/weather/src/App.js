@@ -5,11 +5,12 @@ import {  useState } from "react";
 
 function App() {
   const [ weather, setWeather ] = useState()
+  const [ localName, setLocalName ] = useState("")
     
     return (
-    <div className="flex flex-col justify-between min-h-screen px-6 bg-blue-950">
-      <Header setWeather={setWeather}/>
-      <Main weather={weather}/>
+    <div className="flex flex-col  min-h-screen px-6 bg-blue-950">
+      <Header setWeather={setWeather} setLocalName={setLocalName}/>
+      <Main weather={weather} localName={localName}/>
       <Footer/>
      </div>
   );

@@ -1,11 +1,12 @@
-import React from 'react'
-import { FaCloudSunRain } from "react-icons/fa6";
-
 export function Logo() {
   return (
-    <div className='flex flex-col items-center justify-center gap-3 pt-10'>
-      <FaCloudSunRain className='text-8xl fill-blue-200 '/>
-      <h4 className='text-center font-bold text-blue-200 text-5xl oxygen-regular'>Simple Weather</h4>  
+    <div className='flex justify-center items-center w-full font-bold text-blue-400 text-4xl text-center oxygen-regular'>
+         <div>
+         
+         <i className="wi wi-meteor fill-blue-400 text-5xl mx-4"></i>
+          {/* <FaCloudSunRain className='fill-blue-400 text-7xl mx-4'/> */}
+        </div>         
+         <div>Simple Weather</div>
     </div>
   )
 }
