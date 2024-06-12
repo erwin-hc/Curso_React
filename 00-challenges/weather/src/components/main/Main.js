@@ -25,6 +25,7 @@ const current = forecast?.current
   return (
 
   <div className='flex flex-wrap justify-center max-w-5xl mx-auto flex-auto'>
+   
       {
         dailyForecast &&
         <Today current={current} localName={localName}/>
@@ -36,7 +37,7 @@ const current = forecast?.current
        : <i className="wi wi-cloud-refresh self-center text-9xl text-blue-400"></i>
       //  <TbMapOff size={125} className='self-center  text-blue-400'/>
       }
-
-  </div>  
+    </div>
+   
   )
 }

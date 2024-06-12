@@ -1,3 +1,4 @@
+
 export function Today({ current, localName }) {
 
 function getWeatherIcon(wmoCode) {
@@ -19,18 +20,31 @@ function getWeatherIcon(wmoCode) {
     }
 
   return (
-    <div className="bg-black/35 rounded-xl w-full min-h-[200px] my-4 mx-auto flex flex-col justify-center">
-        <div className="self-center">
+    <div className=" text-blue-50 bg-black/35 rounded-xl w-full min-h-[200px] my-4 mx-auto flex flex-col justify-center">
+        <div className="border border-red-400 w-full flex flex-row p-2">
+            <div className="flex items-center justify-center">
+                <p className=""><i className="wi wi-storm-warning text-4xl mx-5"></i></p>
+            </div>
+            <div className="flex flex-col text-[20px] oxygen-bold">
+                <span>{localName.split(",")[0]}</span>
+                <span className="text-sm">{localName.split(",")[1]}</span>
+            </div>
+        </div> 
+        <div className="border border-red-400 w-full flex items-center justify-center">
             <i className={ getWeatherIcon(current.weather_code) + 
-                " text-8xl text-blue-600/90 p-8 text-center"}></i>
+            " text-[120px] p-10 text-blue-600/90"}>              
+            </i>
         </div>
-        <div>
-        <h2><i className="wi wi-thermometer"></i><span>{current.temperature_2m.toFixed()}</span><span className=''>°C</span></h2>  
-        <h2>Feels Like: <span>{current.temperature_2m.toFixed()}</span><span className=''>°C</span></h2>  
-           
-           
-            {localName}
-        </div>  
+        <div className="border border-red-400 w-full">
+           <div className="flex items-center w-full justify-center">
+                <i className="wi wi-thermometer text-red-400 text-6xl"></i>
+                <div className="text-8xl oxygen-bold">{current.temperature_2m.toFixed()}</div>
+                <div className='text-6xl'>°C</div>
+           </div>
+             <i className="wi wi-thermometer-exterior"></i>
+             <div>{current.temperature_2m.toFixed()}</div>
+             <div className=''>°C</div>
+        </div> 
     </div>
   )
 }

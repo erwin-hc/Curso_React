@@ -35,7 +35,7 @@ export function ForecastDays({item}) {
   }
 
   return (
-    <div className="w-[98%] ss:w-[250px] sm:w-[125px] h-[180px]  text-blue-50 m-2 rounded-xl bg-blue-300/20 shadow-2xl">
+    <div className="w-[98%] sm:w-[125px] h-[180px]  text-blue-50 m-2 rounded-xl bg-blue-300/20 shadow-2xl">
         <ul className='flex flex-col items-center justify-center'>
         {/* <li className='text-gray-200 text-5xl p-2 font-bold'>{getWeatherIcon(item["code"])}</li> */}
           <li className='py-1 text-sm oxygen-ligth uppercase text-blue-400'>{getWeekName(item["time"])}</li>

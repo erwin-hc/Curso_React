@@ -9,7 +9,7 @@ export function Search({ setWeather , setLocalName }) {
   const [suggestions, setSuggestions ] = useState([]);
     
   const {
-    cityStateName : {city, state},
+    cityStateName,
     isLoading,
     getPosition,
     error,
@@ -25,7 +25,7 @@ export function Search({ setWeather , setLocalName }) {
     setWeather({})
     setSuggestions([])
     getPosition()    
-    setQuery(city || state ? `${city}, ${state}` : "")
+    setQuery([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error) 
   };
 
@@ -61,11 +61,12 @@ export function Search({ setWeather , setLocalName }) {
   }
   
   useEffect(()=>{
-    setQuery(city || state ? `${city}, ${state}` : "")
-    setLocalName(city || state ? `${city}, ${state}` : "")
+    setQuery([cityStateName[0],cityStateName[1]].join(", "))
+    setLocalName([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error)   
     setWeather(forecast)  
-  },[city, state, error, forecast, setWeather, setLocalName])
+  },[cityStateName, error, forecast, setWeather, setLocalName])
+ 
 
   useEffect(()=>{
     const callback = () => setSuggestions([])    

@@ -4,7 +4,7 @@ export function useGeolocation() {
     const [isLoading, setIsLoading] = useState(false);
     const [position, setPosition] = useState({});
     const [error, setError] = useState(null);
-    const [cityStateName, setCityStateName] = useState({});
+    const [cityStateName, setCityStateName] = useState([]);
     const [forecast, setForecast ] = useState({})
 
      function getPosition() {
@@ -37,11 +37,7 @@ export function useGeolocation() {
         const res = await fetch(URL)
         const data = await res.json()
           if (data.address) {
-            setCityStateName(
-              {
-                "city" : data.address.city,
-                "state" : data.address.state
-              })            
+            setCityStateName([data.address.city,data.address.state])            
           }        
     } 
 
