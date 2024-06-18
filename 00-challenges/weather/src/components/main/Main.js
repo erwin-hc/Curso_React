@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { TbMapOff } from "react-icons/tb";
 import { ForecastDays } from './ForecastDays.js'
 import { Today } from "./Today.js";
 

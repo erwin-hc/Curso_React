@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react'
+import React, {  useEffect, useRef, useState } from 'react'
 import { City } from "country-state-city";
 import { MdOutlineMyLocation } from "react-icons/md";
 
@@ -6,7 +6,10 @@ import { useGeolocation } from '../../hooks/useGeolocation'
 
 export function Search({ setWeather , setLocalName }) {
   const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0)
   const [suggestions, setSuggestions ] = useState([]);
+
+  const suggestionListRef = useRef(null)
     
   const {
     cityStateName,
@@ -24,8 +27,9 @@ export function Search({ setWeather , setLocalName }) {
   function handleClick() {
     setWeather({})
     setSuggestions([])
+    setSelectedIndex(0)
     getPosition()    
-    setQuery([cityStateName[0],cityStateName[1]].join(", "))
+    cityStateName.length > 0 && setQuery([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error) 
   };
 
@@ -42,6 +46,7 @@ export function Search({ setWeather , setLocalName }) {
       setSuggestions(filteredSuggestions);
     } else {
       setSuggestions([]);
+      setSelectedIndex(0)
       setWeather({})
       }
   };
@@ -51,6 +56,7 @@ export function Search({ setWeather , setLocalName }) {
     setLocalName(`${value[0]}, ${value[1]}`)
     fetchWeather(value[2],value[3])
     setSuggestions([]);
+    setSelectedIndex(0)
   };
 
   async function fetchWeather(lat,lng) {    
@@ -59,36 +65,67 @@ export function Search({ setWeather , setLocalName }) {
     const data = await res.json()
     setWeather(data)
   }
+
+  function keyPressHandler(e) {
+    const length = suggestions.length;
+
+    if (e.keyCode === 40) {
+      setSelectedIndex(selectedIndex + 1);
+      if (selectedIndex >= length - 1) {
+        setSelectedIndex(0);
+      }
+     suggestionListRef.current.scrollTo({ top: selectedIndex * 27.5 , behavior: "smooth" })
+    }
+
+    if (e.keyCode === 38) {
+      setSelectedIndex(selectedIndex - 1);
+      if (selectedIndex <= 0) {
+        setSelectedIndex(length - 1);
+      }
+      suggestionListRef.current.scrollTo({ top: selectedIndex * 20 , behavior: "smooth" })
+    }
+
+    if (e.keyCode === 13) {
+      handleSuggestionClick(suggestions[selectedIndex])
+    }    
+  }
   
   useEffect(()=>{
-    setQuery([cityStateName[0],cityStateName[1]].join(", "))
+    cityStateName.length > 0 && setQuery([cityStateName[0],cityStateName[1]].join(", "))
     setLocalName([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error)   
     setWeather(forecast)  
   },[cityStateName, error, forecast, setWeather, setLocalName])
  
-
   useEffect(()=>{
+    setSelectedIndex(0)
     const callback = () => setSuggestions([])    
     document.addEventListener("click", callback)
     return () => document.removeEventListener("click", callback)
   },[])
- 
+
+
   return (
     <div className='flex items-center justify-center w-full max-w-5xl mx-auto mt-8'>
       <div className='relative w-full h-10'>
       <input value={isLoading ? "Loading ..." : query}
       onChange={handleInputChange}
+      onKeyDown={keyPressHandler}
       placeholder='Search...' 
       className='text-ellipsis text-lg w-full h-10 text-blue-100 border-none rounded-full outline-none pl-14 pr-7 bg-blue-300/20 oxygen-bold'></input>
       <MdOutlineMyLocation onClick={handleClick}
       className='absolute text-3xl text-blue-100 cursor-pointer top-1 left-3 opacity-30 hover:opacity-70'/>
       { suggestions.length > 0 &&
-          <div className='absolute w-full rounded-2xl  bg-slate-800 top-12 left-0 flex flex-col items-start py-2 max-h-[240px] overflow-y-auto'>
+          <div ref={suggestionListRef} className='absolute w-full rounded-2xl  bg-slate-800 top-12 left-0 flex flex-col items-start py-2 max-h-[240px] overflow-y-auto'
+          
+             >
               <ul className='w-[98%] m-auto'>
               {suggestions.map((suggestion, index) => (
-                <li className='hover:rounded-2xl hover:bg-slate-700/50 cursor-pointer w-full text-lg list-none pl-14  text-blue-100 oxygen-regular'key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                  {suggestion[0]}, {suggestion[1]}
+                <li 
+                className={`hover:rounded-2xl hover:bg-blue-300/20 cursor-pointer w-full text-lg list-none pl-14  text-blue-100 oxygen-regular ${selectedIndex === index ? 'active' : ""}`} 
+                key={index} 
+                onClick={() => handleSuggestionClick(suggestion)}>
+                {suggestion[0]}, {suggestion[1]}
                 </li>
               ))}
             </ul> 
