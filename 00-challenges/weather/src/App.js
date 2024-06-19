@@ -8,7 +8,7 @@ function App() {
   const [ localName, setLocalName ] = useState("")
     
     return (
-    <div className="flex flex-col  min-h-screen px-6 bg-blue-950">
+    <div className="flex flex-col min-h-screen px-6 min-w-72 theme-sun text-gray-50">
       <Header setWeather={setWeather} setLocalName={setLocalName}/>
       <Main weather={weather} localName={localName}/>
       <Footer/>

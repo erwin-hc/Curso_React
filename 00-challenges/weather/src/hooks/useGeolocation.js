@@ -7,12 +7,13 @@ export function useGeolocation() {
     const [cityStateName, setCityStateName] = useState([]);
     const [forecast, setForecast ] = useState({})
 
-     function getPosition() {
+    function getPosition() {
       if (!navigator.geolocation)
-          return setError("Not supported in your browser!");
-    
+          return setError("Please input here...");
+
         setIsLoading(true);
-        navigator.geolocation.getCurrentPosition(
+    
+         navigator.geolocation.getCurrentPosition(
           (pos) => {
             setPosition({
               lat: pos.coords.latitude,
@@ -23,14 +24,13 @@ export function useGeolocation() {
             setIsLoading(false);
           },
           (error) => {
-            setError(error.message);
-            console.error(error)
+            setError("Please input here...");
             setIsLoading(false);
           }
         );
     }
     
-    async function fetchCityName(lat, lng) {      
+    async function fetchCityName(lat, lng) {   
         const YOUR_PRIVATE_TOKEN = `pk.bbc27fd22d82fd79345d3a03093148df`
         const URL = `https://us1.locationiq.com/v1/reverse.php?key=${YOUR_PRIVATE_TOKEN}&lat=${lat}&lon=${lng}&format=json`
 
@@ -42,12 +42,12 @@ export function useGeolocation() {
     } 
 
     async function fetchWeather(lat,lng) {    
-      const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min&current=temperature_2m,apparent_temperature,weather_code`
+      const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min&current=temperature_2m,apparent_temperature,weather_code,precipitation,rain,showers,snowfall,wind_speed_10m`
       const res = await fetch(URL)
       const data = await res.json()
       setForecast(data)
     }
-        
+      
     return { isLoading, position, error, cityStateName, getPosition, forecast , fetchWeather }
   
 }

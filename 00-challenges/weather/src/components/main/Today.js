@@ -20,31 +20,40 @@ function getWeatherIcon(wmoCode) {
     }
 
   return (
-    <div className=" text-blue-50 bg-black/35 rounded-xl w-full min-h-[200px] my-4 mx-auto flex flex-col justify-center">
-        <div className="border border-red-400 w-full flex flex-row p-2">
-            <div className="flex items-center justify-center">
-                <p className=""><i className="wi wi-storm-warning text-4xl mx-5"></i></p>
-            </div>
-            <div className="flex flex-col text-[20px] oxygen-bold">
-                <span>{localName.split(",")[0]}</span>
-                <span className="text-sm">{localName.split(",")[1]}</span>
-            </div>
+    <div className="bg-gray-950/50 shadow-2xl rounded-xl w-full my-4 mx-auto grid grid-cols-1 sm:grid-cols-3 ">
+       
+        <div className="w-full flex p-2 py-4">            
+                <div className="flex items-start justify-center">
+                    <p className=""><i className="wi wi-storm-warning text-7xl px-4"></i></p>
+                </div>
+                <div className="flex flex-col oxygen-bold">
+                    <span className="text-2xl">{localName.split(",")[0]}</span>
+                    {/* <span className="text-xl">{localName.split(",")[1]}</span> */}
+                    <div>{new Date(current.time).toDateString()}</div>
+                </div>          
         </div> 
-        <div className="border border-red-400 w-full flex items-center justify-center">
+
+        <div className="w-full flex items-center justify-center pt-2">
             <i className={ getWeatherIcon(current.weather_code) + 
-            " text-[120px] p-10 text-blue-600/90"}>              
+            " text-[150px] text-blue-50 my-10"}>              
             </i>
         </div>
-        <div className="border border-red-400 w-full">
-           <div className="flex items-center w-full justify-center">
-                <i className="wi wi-thermometer text-red-400 text-6xl"></i>
-                <div className="text-8xl oxygen-bold">{current.temperature_2m.toFixed()}</div>
-                <div className='text-6xl'>°C</div>
-           </div>
-             <i className="wi wi-thermometer-exterior"></i>
-             <div>{current.temperature_2m.toFixed()}</div>
-             <div className=''>°C</div>
+
+        <div className="w-full pb-6 pt-1 self-end">
+            <div className="flex items-center justify-end w-full pr-4">
+                    <div className="flex justify-center items-center">
+                    <i className="wi wi-thermometer text-6xl p-2 mt-3"></i>
+                    </div>  
+                    <div className="text-8xl oxygen-bold ">{current.temperature_2m.toFixed()}</div>
+                    <div className='text-6xl'>°</div>
+            </div>
+            <div className="flex items-center w-full justify-end pr-4">
+                    <div className="text-xl oxygen-bold mr-3">Feels like</div>
+                    <div className="text-xl oxygen-bold">{current.apparent_temperature.toFixed()}</div>
+                    <div className='text-xl p-1'>°</div>
+            </div>
         </div> 
+
     </div>
   )
 }

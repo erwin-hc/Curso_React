@@ -49,3 +49,8 @@
   .active {
     @apply bg-blue-300/20 rounded-2xl
   }
+
+  .theme-sun {
+    @apply bg-cyan-300 
+
+  }

@@ -35,15 +35,15 @@ export function ForecastDays({item}) {
   }
 
   return (
-    <div className="w-[98%] sm:w-[125px] h-[180px]  text-blue-50 m-2 rounded-xl bg-blue-300/20 shadow-2xl">
+    <div className="w-[98%] sm:w-[125px] h-[180px] m-2 rounded-xl bg-gray-950/25 ">
         <ul className='flex flex-col items-center justify-center'>
         {/* <li className='text-gray-200 text-5xl p-2 font-bold'>{getWeatherIcon(item["code"])}</li> */}
-          <li className='py-1 text-sm oxygen-ligth uppercase text-blue-400'>{getWeekName(item["time"])}</li>
-          <li className='text-gray-200 text-5xl mt-5 font-bold'>
+          <li className='py-1 mt-2 text-sm oxygen-ligth uppercase'><h2>{getWeekName(item["time"])}</h2></li>
+          <li className='text-5xl mt-5 font-bold'>
           <i className={getWeatherIcon(item["code"])}></i>
           </li>
-          <li className='py-1 text-blue-400 oxygen-bold'><span className='text-4xl  p-2 font-bold'>{item["maxTemp"].toFixed()}</span><span className=''>°C</span></li>
-          <li className='text-blue-100 text-sm oxygen-regular'><span>{item["minTemp"].toFixed()}</span><span className=''>°C</span></li>
+          <li className='mt-1 oxygen-bold'><span className='fuck text-4xl p-2 font-bold'>{item["maxTemp"].toFixed()}</span><span className=''>°C</span></li>
+          <li className='text-sm oxygen-regular'><span>{item["minTemp"].toFixed()}</span><span className=''>°C</span></li>
         </ul>
     </div>
   )

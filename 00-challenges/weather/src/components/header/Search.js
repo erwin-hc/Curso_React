@@ -74,7 +74,7 @@ export function Search({ setWeather , setLocalName }) {
       if (selectedIndex >= length - 1) {
         setSelectedIndex(0);
       }
-     suggestionListRef.current.scrollTo({ top: selectedIndex * 27.5 , behavior: "smooth" })
+     suggestionListRef.current.scrollTo({ top: selectedIndex * 28 + 30 , behavior: "smooth" })
     }
 
     if (e.keyCode === 38) {
@@ -82,7 +82,7 @@ export function Search({ setWeather , setLocalName }) {
       if (selectedIndex <= 0) {
         setSelectedIndex(length - 1);
       }
-      suggestionListRef.current.scrollTo({ top: selectedIndex * 20 , behavior: "smooth" })
+      suggestionListRef.current.scrollTo({ top: selectedIndex * 28 - 30 , behavior: "smooth" })
     }
 
     if (e.keyCode === 13) {
@@ -104,27 +104,27 @@ export function Search({ setWeather , setLocalName }) {
     return () => document.removeEventListener("click", callback)
   },[])
 
-
   return (
     <div className='flex items-center justify-center w-full max-w-5xl mx-auto mt-8'>
       <div className='relative w-full h-10'>
       <input value={isLoading ? "Loading ..." : query}
+      onClick={()=>setQuery("")}
       onChange={handleInputChange}
       onKeyDown={keyPressHandler}
       placeholder='Search...' 
-      className='text-ellipsis text-lg w-full h-10 text-blue-100 border-none rounded-full outline-none pl-14 pr-7 bg-blue-300/20 oxygen-bold'></input>
+      className='text-gray-50 text-ellipsis text-lg w-full h-10 border-none rounded-full outline-none pl-14 pr-7 bg-gray-950/10 oxygen-bold placeholder:text-gray-50/70'></input>
       <MdOutlineMyLocation onClick={handleClick}
-      className='absolute text-3xl text-blue-100 cursor-pointer top-1 left-3 opacity-30 hover:opacity-70'/>
+      className='absolute text-3xl cursor-pointer top-1 left-3 opacity-50 hover:opacity-70'/>
       { suggestions.length > 0 &&
-          <div ref={suggestionListRef} className='absolute w-full rounded-2xl  bg-slate-800 top-12 left-0 flex flex-col items-start py-2 max-h-[240px] overflow-y-auto'
-          
-             >
+          <div ref={suggestionListRef} className='absolute w-full rounded-2xl  bg-gray-950/75 top-12 left-0 flex flex-col items-start py-2 max-h-[240px] overflow-y-auto'>
               <ul className='w-[98%] m-auto'>
               {suggestions.map((suggestion, index) => (
                 <li 
-                className={`hover:rounded-2xl hover:bg-blue-300/20 cursor-pointer w-full text-lg list-none pl-14  text-blue-100 oxygen-regular ${selectedIndex === index ? 'active' : ""}`} 
+                className={`hover:rounded-2xl hover:bg-gray-50/20 cursor-pointer w-full text-lg list-none pl-14 oxygen-regular ${selectedIndex === index ? 'active' : ""}`} 
                 key={index} 
-                onClick={() => handleSuggestionClick(suggestion)}>
+                onClick={() => handleSuggestionClick(suggestion)}
+                onMouseEnter={()=>setSelectedIndex(index)}  
+                >
                 {suggestion[0]}, {suggestion[1]}
                 </li>
               ))}
