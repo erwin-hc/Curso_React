@@ -2,11 +2,11 @@ import React from 'react'
 import { Logo } from './Logo.js'
 import { Search } from './Search.js'
 
-export function Header({setWeather, setLocalName}) {
+export function Header({setWeather, setLocalName, seTisDay}) {
   return (
     <header className='flex flex-col mt-5 items-start'>
       <Logo/>
-      <Search setWeather={setWeather} setLocalName={setLocalName}/>      
+      <Search setWeather={setWeather} setLocalName={setLocalName} seTisDay={seTisDay}/>      
     </header>
   )
 }

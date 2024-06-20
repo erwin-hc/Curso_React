@@ -51,6 +51,9 @@
   }
 
   .theme-sun {
-    @apply bg-cyan-300 
+    @apply bg-cyan-300 text-gray-50 
+  }
 
+  .theme-night {
+    @apply bg-slate-800 text-gray-100/80 
   }

@@ -4,7 +4,7 @@ import { MdOutlineMyLocation } from "react-icons/md";
 
 import { useGeolocation } from '../../hooks/useGeolocation'
 
-export function Search({ setWeather , setLocalName }) {
+export function Search({ setWeather , setLocalName, seTisDay }) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [suggestions, setSuggestions ] = useState([]);
@@ -19,6 +19,7 @@ export function Search({ setWeather , setLocalName }) {
     forecast
   } = useGeolocation();
    
+
   const possibleValues = City.getAllCities().map((c) => {
     const { name, stateCode, latitude,longitude } = c
     return [ name, stateCode, latitude,longitude ]
@@ -52,18 +53,19 @@ export function Search({ setWeather , setLocalName }) {
   };
 
   function handleSuggestionClick(value) {
-    setQuery(`${value[0]}, ${value[1]}`);
-    setLocalName(`${value[0]}, ${value[1]}`)
-    fetchWeather(value[2],value[3])
+    value && setQuery(`${value[0]}, ${value[1]}`);
+    value && setLocalName(`${value[0]}, ${value[1]}` )
+    value && fetchWeather(value[2],value[3])
     setSuggestions([]);
     setSelectedIndex(0)
   };
 
   async function fetchWeather(lat,lng) {    
-    const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min&current=temperature_2m,apparent_temperature,weather_code`
+    const URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=weathercode,temperature_2m_max,temperature_2m_min&current=temperature_2m,apparent_temperature,weather_code,is_day`
     const res = await fetch(URL)
     const data = await res.json()
-    setWeather(data)
+    setWeather(data)    
+    seTisDay(data.current.is_day)
   }
 
   function keyPressHandler(e) {
@@ -94,8 +96,10 @@ export function Search({ setWeather , setLocalName }) {
     cityStateName.length > 0 && setQuery([cityStateName[0],cityStateName[1]].join(", "))
     setLocalName([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error)   
-    setWeather(forecast)  
-  },[cityStateName, error, forecast, setWeather, setLocalName])
+    setWeather(forecast) 
+    console.log(forecast)
+    seTisDay(forecast?.current?.is_day)
+  },[cityStateName, error, forecast, setWeather, setLocalName, seTisDay])
  
   useEffect(()=>{
     setSelectedIndex(0)
@@ -111,7 +115,7 @@ export function Search({ setWeather , setLocalName }) {
       onClick={()=>setQuery("")}
       onChange={handleInputChange}
       onKeyDown={keyPressHandler}
-      placeholder='Search...' 
+      placeholder='Pesquisar...' 
       className='text-gray-50 text-ellipsis text-lg w-full h-10 border-none rounded-full outline-none pl-14 pr-7 bg-gray-950/10 oxygen-bold placeholder:text-gray-50/70'></input>
       <MdOutlineMyLocation onClick={handleClick}
       className='absolute text-3xl cursor-pointer top-1 left-3 opacity-50 hover:opacity-70'/>

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { ForecastDays } from './ForecastDays.js'
 import { Today } from "./Today.js";
 
-export function Main({weather, localName}) { 
+export function Main({weather, localName, isDay}) { 
 const [forecast, setForecast] = useState({})
 
 useEffect(()=>{
-  setForecast(weather)  
+  setForecast(weather)   
 },[weather])
 
 const dailyForecast = forecast?.daily?.time?.map((time,index) => (
@@ -26,7 +26,7 @@ const current = forecast?.current
    
       {
       dailyForecast &&
-        <Today current={current} localName={localName}/>
+        <Today current={current} localName={localName} isDay={isDay}/>
       }      
       {
       dailyForecast 
