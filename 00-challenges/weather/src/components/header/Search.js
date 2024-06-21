@@ -4,7 +4,7 @@ import { MdOutlineMyLocation } from "react-icons/md";
 
 import { useGeolocation } from '../../hooks/useGeolocation'
 
-export function Search({ setWeather , setLocalName, seTisDay }) {
+export function Search({ setWeather , setLocalName, seTisDay, setWcode }) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [suggestions, setSuggestions ] = useState([]);
@@ -19,7 +19,6 @@ export function Search({ setWeather , setLocalName, seTisDay }) {
     forecast
   } = useGeolocation();
    
-
   const possibleValues = City.getAllCities().map((c) => {
     const { name, stateCode, latitude,longitude } = c
     return [ name, stateCode, latitude,longitude ]
@@ -66,6 +65,7 @@ export function Search({ setWeather , setLocalName, seTisDay }) {
     const data = await res.json()
     setWeather(data)    
     seTisDay(data.current.is_day)
+    setWcode(data?.current?.weather_code)
   }
 
   function keyPressHandler(e) {
@@ -97,9 +97,10 @@ export function Search({ setWeather , setLocalName, seTisDay }) {
     setLocalName([cityStateName[0],cityStateName[1]].join(", "))
     if (error) setQuery(error)   
     setWeather(forecast) 
-    console.log(forecast)
     seTisDay(forecast?.current?.is_day)
-  },[cityStateName, error, forecast, setWeather, setLocalName, seTisDay])
+    setWcode(forecast?.current?.weather_code)
+
+  },[cityStateName, error, forecast, setWeather, setLocalName, seTisDay, setWcode])
  
   useEffect(()=>{
     setSelectedIndex(0)

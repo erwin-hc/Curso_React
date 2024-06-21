@@ -49,11 +49,21 @@
   .active {
     @apply bg-blue-300/20 rounded-2xl
   }
-
-  .theme-sun {
-    @apply bg-cyan-300 text-gray-50 
+  .theme-default {
+    @apply  bg-neutral-800 text-gray-100/80 
   }
-
   .theme-night {
     @apply bg-slate-800 text-gray-100/80 
+  }
+  .theme-sun {
+    @apply bg-orange-300 text-gray-50   
+  }
+  .theme-cloud {
+    @apply bg-slate-600/50 text-gray-100/80 
+  }
+  .theme-fog {
+    @apply bg-slate-300 text-gray-50 
+  }
+  .theme-rain {
+    @apply bg-sky-950 text-gray-50
   }

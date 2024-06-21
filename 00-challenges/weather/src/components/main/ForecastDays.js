@@ -9,7 +9,7 @@ function getWeatherIcon(wmoCode) {
     [[2], "wi wi-day-sunny-overcast"],
     [[3], "wi wi-cloudy"],
     [[45, 48], "wi wi-day-fog"],
-    [[51, 56, 61, 66, 80], "wi wi-day-rain"],
+    [[51, 56, 61, 66, 80], "wi wi-rain"],
     [[53, 55, 63, 65, 57, 67, 81, 82], "wi wi-rain"],
     [[71, 73, 75, 77, 85, 86], "wi wi-snow"],
     [[95], "wi wi-thunderstorm"],
