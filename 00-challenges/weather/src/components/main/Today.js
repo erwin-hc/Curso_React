@@ -23,7 +23,7 @@ function getWeatherIconNigth(wmoCode) {
     const icons = new Map([
         [[0], "wi wi-night-sunny"],
         [[1], "wi wi-night-cloudy"],
-        [[2], "wi wi-night-sunny-overcast"],
+        [[2], "wi wi-night-alt-cloudy"],
         [[3], "wi wi-cloudy"],
         [[45, 48], "wi wi-night-fog"],
         [[51, 56, 61, 66, 80], "wi wi-night-rain"],
