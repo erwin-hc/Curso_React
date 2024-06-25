@@ -30,7 +30,7 @@ const current = forecast?.current
       }      
       {
       dailyForecast 
-       ? dailyForecast?.map((item, index) => <ForecastDays key={index} item={item}/>)
+       ? dailyForecast?.map((item, index) => <ForecastDays key={index} item={item} isToday={index===0}/>)
        : <i className="wi wi-cloud-refresh self-center text-9xl"></i>     
       }
 

@@ -1,6 +1,6 @@
 import 'weather-react-icons/lib/css/weather-icons.css';
 
-export function ForecastDays({item}) {
+export function ForecastDays({item, isToday}) {
 
 function getWeatherIcon(wmoCode) {
   const icons = new Map([
@@ -28,13 +28,13 @@ function getWeekName(strDate) {
 }
 
   return (
-    <div className="w-[98%] sm:w-[125px] h-[200px] m-2 rounded-xl bg-gray-950/25 ">
+    <div className="w-[98%] sm:w-[125px] m-2 rounded-xl bg-gray-950/25 ">
         <div className='flex flex-col items-center justify-center'>
              
               <div className='mt-2 w-full text-sm oxygen-regular uppercase tracking-widest'>
                 <div className='flex flex-wrap justify-center items-center'>
                   <div className='px-1'>
-                    {getWeekName(item["time"])}
+                    {isToday ? "HOJE." : getWeekName(item["time"])}
                   </div>
                   <div>
                     {
@@ -60,7 +60,7 @@ function getWeekName(strDate) {
                 <span className='pt-3 self-start'>°C</span>
               </div>
 
-              <div className='flex justify-center items-center w-full text-sm oxygen-regular'>
+              <div className='flex justify-center items-center w-full text-sm oxygen-regular mb-3'>
                 <span className='text-sm text-blue-300'>
                  &darr;
                 </span>

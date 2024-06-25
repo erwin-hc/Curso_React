@@ -66,11 +66,11 @@ function getWeatherIconNigth(wmoCode) {
                 </div>          
         </div> 
 
-        <div className="w-full flex items-center justify-center pt-2">
+        <div className="w-full flex items-center justify-center mb-10 mt-14">
             {
                 isDay === 1
-                ? <i className={ getWeatherIcon(current.weather_code) + " text-[150px] my-10"}></i> 
-                : <i className={ getWeatherIconNigth(current.weather_code) + " text-[150px] my-10"}></i> 
+                ? <i className={ getWeatherIcon(current.weather_code) + " text-[150px]"}></i> 
+                : <i className={ getWeatherIconNigth(current.weather_code) + " text-[150px]"}></i> 
             }
             
         </div>
