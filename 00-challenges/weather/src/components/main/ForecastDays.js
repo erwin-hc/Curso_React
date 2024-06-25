@@ -56,7 +56,7 @@ function getWeekName(strDate) {
                 <span className='text-red-300 text-2xl'>
                  &uarr;
                 </span>
-                <span className='text-4xl font-bold'>{item["maxTemp"].toFixed()}</span>
+                <span className='text-4xl font-bold'>{Math.ceil(item["maxTemp"])}</span>
                 <span className='pt-3 self-start'>°C</span>
               </div>
 
@@ -64,7 +64,7 @@ function getWeekName(strDate) {
                 <span className='text-sm text-blue-300'>
                  &darr;
                 </span>
-                <span className='px-1'>{item["minTemp"].toFixed()}</span>
+                <span className='px-1'>{Math.floor(item["minTemp"])}</span>
                 <span className=''>°C</span>
               </div>
 

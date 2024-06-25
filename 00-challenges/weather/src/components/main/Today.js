@@ -80,12 +80,12 @@ function getWeatherIconNigth(wmoCode) {
                     <div className="flex justify-center items-center">
                     <i className="wi wi-thermometer text-6xl p-2 mt-3"></i>
                     </div>  
-                    <div className="text-8xl oxygen-bold ">{current.temperature_2m.toFixed()}</div>
+                    <div className="text-8xl oxygen-bold ">{Math.ceil(current.temperature_2m)}</div>
                     <div className='text-6xl'>°</div>
             </div>
             <div className="flex items-center w-full justify-end pr-4">
                     <div className="text-xl oxygen-bold mr-3">Sensação</div>
-                    <div className="text-xl oxygen-bold">{current.apparent_temperature.toFixed()}</div>
+                    <div className="text-xl oxygen-bold">{Math.ceil(current.apparent_temperature)}</div>
                     <div className='text-xl p-1'>°</div>
             </div>
         </div> 
